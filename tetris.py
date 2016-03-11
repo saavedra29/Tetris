@@ -20,8 +20,8 @@ import time
 import random
 import copy
 
-import Tkinter as tk
-import tkMessageBox
+import tkinter as tk
+from tkinter import messagebox
 
 
 
@@ -176,12 +176,12 @@ class Application(tk.Frame):
         lb_status.grid(row=0, column=1, padx=(0, 20), pady=20, sticky=tk.N)
 
     def draw_grid(self):
-        for i in xrange(self.width - 1):
+        for i in range(self.width - 1):
             x = (self.size * i) + self.size
             y0 = 0
             y1 = self.size * self.height
             self.canvas.create_line(x, y0, x, y1, fill=BOARD_GRID_COLOR)
-        for i in xrange(self.height - 1):
+        for i in range(self.height - 1):
             x0 = 0
             x1 = self.size * self.width
             y = (self.size * i) + self.size
@@ -227,10 +227,10 @@ class Application(tk.Frame):
 
     def get_init_board(self):
         if getattr(self, 'board', None) is None:
-            self.board = [[0] * self.width for _ in xrange(self.height)]
+            self.board = [[0] * self.width for _ in range(self.height)]
         else:
-            for y in xrange(self.height):
-                for x in xrange(self.width):
+            for y in range(self.height):
+                for x in range(self.width):
                     if self.board[y][x]:
                         self.canvas.delete(self.board[y][x])
                         self.board[y][x] = 0
@@ -250,7 +250,7 @@ class Application(tk.Frame):
             if self.is_gameover(self.next):
                 title = 'Game Over'
                 message = 'Your score: %d' % self.status['score']
-                tkMessageBox.showinfo(title, message)
+                messagebox.showinfo(title, message)
                 self.game_init()
             else:
                 self.tetromino = self.next
@@ -264,7 +264,7 @@ class Application(tk.Frame):
 
     def check_status(self):
         rows = []
-        for row in xrange(self.height):
+        for row in range(self.height):
             if 0 not in self.board[row]:
                 rows.append(row)
         if rows:
@@ -284,7 +284,7 @@ class Application(tk.Frame):
                 self.canvas.delete(id)
             del self.board[row]
             self.board.insert(0, [0] * self.width)
-            for row0 in xrange(row + 1):
+            for row0 in range(row + 1):
                 for id0 in self.board[row0]:
                     self.canvas.move(id0, 0, self.size)
         self.canvas.update()
@@ -321,8 +321,8 @@ class Application(tk.Frame):
 
     def is_gameover(self, next):
         x, y = next['coords']
-        for y0 in xrange(next['rows']):
-            for x0 in xrange(next['cols']):
+        for y0 in range(next['rows']):
+            for x0 in range(next['cols']):
                 x1 = x0 + x
                 y1 = y0 + y
                 if self.board[y1][x1]:
@@ -335,8 +335,8 @@ class Application(tk.Frame):
         self.del_tetromino()
         piece = self.tetromino['pieces'][self.tetromino['actual']]
         x0, y0 = self.tetromino['coords']
-        for y in xrange(self.tetromino['rows']):
-            for x in xrange(self.tetromino['cols']):
+        for y in range(self.tetromino['rows']):
+            for x in range(self.tetromino['cols']):
                 if piece[y][x] == 1:
                     x1 = (x0 + x) * self.size
                     y1 = (y0 + y) * self.size
@@ -352,8 +352,8 @@ class Application(tk.Frame):
 
     def del_tetromino(self):
         if self.tetromino['ids']:
-            for y in xrange(self.height):
-                for x in xrange(self.width):
+            for y in range(self.height):
+                for x in range(self.width):
                     if self.board[y][x] in self.tetromino['ids']:
                         self.board[y][x] = 0
             for id in self.tetromino['ids']:
@@ -374,8 +374,8 @@ class Application(tk.Frame):
         piece = self.tetromino['pieces'][next]
         board = self.board
         x, y = self.tetromino['coords']
-        for y0 in xrange(self.tetromino['rows']):
-            for x0 in xrange(self.tetromino['cols']):
+        for y0 in range(self.tetromino['rows']):
+            for x0 in range(self.tetromino['cols']):
                 if piece[y0][x0] == 1:
                     if x == -1 and x0 == 1:
                         return False
@@ -411,8 +411,8 @@ class Application(tk.Frame):
             }
 
         x_start_stop_step, y_start_stop_step = ranges[offset]
-        for y0 in xrange(*y_start_stop_step):
-            for x0 in xrange(*x_start_stop_step):
+        for y0 in range(*y_start_stop_step):
+            for x0 in range(*x_start_stop_step):
                 id = self.board[y0][x0]
                 if id in self.tetromino['ids']:
                     self.board[y0 + y][x0 + x] = self.board[y0][x0]
@@ -427,8 +427,8 @@ class Application(tk.Frame):
         piece = self.tetromino['pieces'][self.tetromino['actual']]
         board = self.board
         x, y = self.tetromino['coords']
-        for y0 in xrange(self.tetromino['rows']):
-            for x0 in xrange(self.tetromino['cols']):
+        for y0 in range(self.tetromino['rows']):
+            for x0 in range(self.tetromino['cols']):
                 if piece[y0][x0] == 1:
                     if direction == 'Left':
                         x1 = x + x0 - 1
