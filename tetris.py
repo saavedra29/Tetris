@@ -153,6 +153,7 @@ class Application(tk.Tk):
     def __init__(self, width=WIDTH, height=HEIGHT, size=SIZE):
         tk.Tk.__init__(self)
         self.title('Tetris')
+        self.configTop = None
         self.grid()
         self.width = width
         self.height = height
@@ -193,12 +194,21 @@ class Application(tk.Tk):
                                 highlightbackground=BOARD_FG_COLOR)
         self.canvas.grid(row=0, column=0, padx=20, pady=20)
 
+
         lb_status = self.lb_status = tk.Label(
             self, bg=BG_COLOR, fg=FONT_COLOR, font=('monospace', FONT_SIZE))
         lb_status.grid(row=0, column=1, padx=(0, 20), pady=20, sticky=tk.N)
 
+
+
     def generalConfig(self):
-        pass
+        self.configTop = tk.Toplevel(takefocus=True)
+        self.configTop.focus_set()
+        self.configTop.grab_set()
+        self.configTop.title='Configurations'
+        submitButton = tk.Button(self.configTop, text='Submit',
+                                      command=self.configTop.destroy)
+        submitButton.pack()
 
     # Exit function
     def onExit(self):
@@ -278,25 +288,29 @@ class Application(tk.Tk):
                 'total': 0, 'next': ''}
 
     def step(self):
-        if self.tetromino and self.can_be_moved('Down'):
-            self.move_tetromino((0, 1))
-            self.job_id = self.canvas.after(self.delay, self.step)
+        if self.configTop is not None  and self.configTop.winfo_exists():
+            self.job_id = self.canvas.after(100, self.step)
         else:
-            self.check_status()
-            if self.is_gameover(self.next):
-                title = 'Game Over'
-                message = 'Your score: %d' % self.status['score']
-                messagebox.showinfo(title, message)
-                self.game_init()
-            else:
-                self.tetromino = self.next
-                self.next = copy.deepcopy(random.choice(self.tetrominos))
-                self.status[self.tetromino['name']] += 1
-                self.status['total'] += 1
-                self.status['next'] = self.next['name']
-                self.update_label_status()
-                self.draw_tetromino()
+            if self.tetromino and self.can_be_moved('Down'):
+                self.move_tetromino((0, 1))
                 self.job_id = self.canvas.after(self.delay, self.step)
+            else:
+                self.check_status()
+                if self.is_gameover(self.next):
+                    title = 'Game Over'
+                    message = 'Your score: %d' % self.status['score']
+                    messagebox.showinfo(title, message)
+                    self.game_init()
+                else:
+                    self.tetromino = self.next
+                    self.next = copy.deepcopy(random.choice(self.tetrominos))
+                    self.status[self.tetromino['name']] += 1
+                    self.status['total'] += 1
+                    self.status['next'] = self.next['name']
+                    self.update_label_status()
+                    self.draw_tetromino()
+
+                    self.job_id = self.canvas.after(self.delay, self.step)
 
     def check_status(self):
         rows = []
