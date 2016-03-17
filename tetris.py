@@ -19,11 +19,12 @@ __author__ = 'Leonardo Vidarte'
 import time
 import random
 import copy
+import platform
 
 import tkinter as tk
 from tkinter import messagebox
-
-
+from os import getpid
+from os import system
 
 # ===============================================
 # WINDOW OPTIONS
@@ -59,7 +60,8 @@ LEVEL_0_DELAY = 1000 # inital delay between steps
 ROWS_BY_LEVEL = 10
 POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
 
-# 
+#
+MENU_FONTS = 'TkDefaultFont 12'
 WIDTH = 10
 HEIGHT = 20
 SIZE = 30 # square size in pixels
@@ -146,10 +148,11 @@ Z = (
 
 
 
-class Application(tk.Frame):
+class Application(tk.Tk):
 
     def __init__(self, width=WIDTH, height=HEIGHT, size=SIZE):
-        tk.Frame.__init__(self, bg=BG_COLOR)
+        tk.Tk.__init__(self)
+        self.title('Tetris')
         self.grid()
         self.width = width
         self.height = height
@@ -166,6 +169,25 @@ class Application(tk.Frame):
 
         width = self.width * self.size
         height = self.height * self.size
+
+        # main menu
+        self.menuBar = tk.Menu()
+        self.config(menu=self.menuBar)
+        self.menuBar.config(font=MENU_FONTS)
+
+        # file submenu
+        self.fileMenu = tk.Menu(self.menuBar, tearoff=False,
+                                font=MENU_FONTS)
+        self.menuBar.add_cascade(label='File', menu=self.fileMenu)
+        self.fileMenu.add_command(label='Exit', command=self.onExit)
+
+        # configuration submenu
+        self.confMenu = tk.Menu(self.menuBar, tearoff=False,
+                                font=MENU_FONTS)
+        self.menuBar.add_cascade(label='Configuration', menu=self.confMenu)
+        self.confMenu.add_command(label='Game', command=self.generalConfig)
+
+
         self.canvas = tk.Canvas(self, width=width, height=height,
                                 bg=BOARD_BG_COLOR,
                                 highlightbackground=BOARD_FG_COLOR)
@@ -174,6 +196,20 @@ class Application(tk.Frame):
         lb_status = self.lb_status = tk.Label(
             self, bg=BG_COLOR, fg=FONT_COLOR, font=('monospace', FONT_SIZE))
         lb_status.grid(row=0, column=1, padx=(0, 20), pady=20, sticky=tk.N)
+
+    def generalConfig(self):
+        pass
+
+    # Exit function
+    def onExit(self):
+        id = getpid()
+        os = platform.system()
+        if os == 'Linux':
+            command = 'kill ' + str(id)
+            system(command)
+        else:
+            command = 'taskkill -f /pid ' + str(id)
+            system(command)
 
     def draw_grid(self):
         for i in range(self.width - 1):
@@ -188,10 +224,10 @@ class Application(tk.Frame):
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
-        self.canvas.bind_all('<KeyPress-Up>', self.rotate)
-        self.canvas.bind_all('<KeyPress-Down>', self.move)
-        self.canvas.bind_all('<KeyPress-Left>', self.move)
-        self.canvas.bind_all('<KeyPress-Right>', self.move)
+        self.bind('<KeyPress-Up>', self.rotate)
+        self.bind('<KeyPress-Down>', self.move)
+        self.bind('<KeyPress-Left>', self.move)
+        self.bind('<KeyPress-Right>', self.move)
 
     def get_tetrominos(self):
         tetrominos = []
@@ -316,7 +352,7 @@ class Application(tk.Frame):
             'Total: %6s' % self.status['total'],
             '',
             'Next : %6s' % self.status['next'],
-            ] 
+            ]
         self.lb_status.config(text='\n'.join(lines))
 
     def is_gameover(self, next):
@@ -455,6 +491,5 @@ if __name__ == '__main__':
 
     prog = u'Tetяis'
     app = Application()
-    app.master.title(prog)
     app.mainloop()
 
