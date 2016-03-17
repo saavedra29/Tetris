@@ -62,7 +62,7 @@ POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
 # 
 WIDTH = 10
 HEIGHT = 20
-SIZE = 20 # square size in pixels
+SIZE = 30 # square size in pixels
 
 # Tetrominos
 I = (
@@ -454,28 +454,7 @@ class Application(tk.Frame):
 if __name__ == '__main__':
 
     prog = u'Tetяis'
-
-    from optparse import OptionParser
-    parser = OptionParser(description=prog)
-    parser.add_option('-W', '--width', type=int, default=WIDTH,
-                      help="board width")
-    parser.add_option('-H', '--height', type=int, default=HEIGHT,
-                      help="board height")
-    parser.add_option('-s', '--size', type=int, default=SIZE,
-                      help="square size")
-    parser.add_option('-t', '--theme', type=str, default=None,
-                      help="color config file")
-    args, _ = parser.parse_args()
-
-    if args.theme:
-        if args.theme.endswith('.py'):
-            args.theme = args.theme[:-3]
-        try:
-            exec('from %s import *' % args.theme)
-        except ImportError:
-            pass
-
-    app = Application(args.width, args.height, args.size)
+    app = Application()
     app.master.title(prog)
     app.mainloop()
 
