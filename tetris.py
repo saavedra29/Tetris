@@ -25,6 +25,7 @@ import tkinter as tk
 from tkinter import messagebox
 from os import getpid
 from os import system
+from conf import Configuration
 
 # ===============================================
 # WINDOW OPTIONS
@@ -62,8 +63,7 @@ POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
 
 #
 MENU_FONTS = 'TkDefaultFont 12'
-MENU_BIG_FONTS = 'TkDefaultFont 14'
-WIDTH = 13
+WIDTH = 10
 HEIGHT = 20
 SIZE = 30 # square size in pixels
 
@@ -155,7 +155,7 @@ class Application(tk.Tk):
         tk.Tk.__init__(self)
         self.title('Tetris')
         self.option_add('*Font', MENU_FONTS)
-        self.configTop = None
+        self.configurationWin = None
         self.grid()
         self.width = width
         self.height = height
@@ -165,6 +165,16 @@ class Application(tk.Tk):
         self.create_events()
         self.tetrominos = self.get_tetrominos()
         self.game_init()
+
+
+        self.gameTypeVar = tk.IntVar()
+        self.shapeL = tk.IntVar()
+        self.shapeO = tk.IntVar()
+        self.shapeI = tk.IntVar()
+        self.shapeS = tk.IntVar()
+        self.shapeT = tk.IntVar()
+        self.shapeZ = tk.IntVar()
+        self.shapeJ = tk.IntVar()
 
     def create_widgets(self):
         top = self.winfo_toplevel()
@@ -199,143 +209,20 @@ class Application(tk.Tk):
         lb_status.grid(row=0, column=1, padx=(0, 20), pady=20, sticky=tk.N)
 
 
+    def debug(self):
+        print('gameTypeVar: {}'.format(str(self.gameTypeVar.get())))
+        print('Shapes:')
+        print('ShapeL: {}'.format(str(self.shapeL.get())))
+        print('ShapeJ: {}'.format(str(self.shapeJ.get())))
+        print('ShapeI: {}'.format(str(self.shapeI.get())))
+        print('ShapeO: {}'.format(str(self.shapeO.get())))
+        print('ShapeT: {}'.format(str(self.shapeT.get())))
+        print('ShapeS: {}'.format(str(self.shapeS.get())))
+        print('ShapeZ: {}'.format(str(self.shapeZ.get())))
 
     def generalConfig(self):
+        self.configurationWin = Configuration(self)
 
-        gameTypeVar = tk.IntVar()
-        shapeL = tk.IntVar()
-        shapeO = tk.IntVar()
-        shapeI = tk.IntVar()
-        shapeS = tk.IntVar()
-        shapeT = tk.IntVar()
-        shapeZ = tk.IntVar()
-        shapeJ = tk.IntVar()
-        photoL = tk.PhotoImage(file='images/L.png')
-        photoO = tk.PhotoImage(file='images/O.png')
-        photoI = tk.PhotoImage(file='images/I.png')
-        photoS = tk.PhotoImage(file='images/S.png')
-        photoT = tk.PhotoImage(file='images/T.png')
-        photoZ = tk.PhotoImage(file='images/Z.png')
-        photoJ = tk.PhotoImage(file='images/J.png')
-
-
-        # Toplevel window for configuration
-        self.configTop = tk.Toplevel(takefocus=True)
-        self.configTop.focus_set()
-        self.configTop.grab_set()
-        self.configTop.title='Configurations'
-
-
-        # Dimensions frame
-        self.dimensionsFrame = tk.Frame(self.configTop,
-                                        borderwidth=2, relief=tk.GROOVE,
-                                        padx=10, pady=10)
-        self.dimensionsFrame.grid(row=0, column=0)
-        self.dimensionLabel = tk.Label(self.dimensionsFrame,
-                                       font=MENU_BIG_FONTS,
-                                       text='Dimensions')
-        self.dimensionLabel.grid(row=0, column=0, columnspan=2)
-        self.heightLabel = tk.Label(self.dimensionsFrame, text='Height:')
-        self.heightLabel.grid(row=1, sticky=tk.W)
-        self.widthLabel = tk.Label(self.dimensionsFrame, text='Width:')
-        self.widthLabel.grid(row=2, sticky=tk.W)
-        self.boxSizeLabel= tk.Label(self.dimensionsFrame, text='Box Size:')
-        self.boxSizeLabel.grid(row=3, sticky=tk.W)
-        self.heightSpin = tk.Spinbox(self.dimensionsFrame, from_=10, to=40)
-        self.heightSpin.grid(row=1, column=1)
-        self.widthSpin = tk.Spinbox(self.dimensionsFrame, from_=6, to=30)
-        self.widthSpin.grid(row=2, column=1)
-        self.boxSizeSpin = tk.Spinbox(self.dimensionsFrame, from_=10, to=100)
-        self.boxSizeSpin.grid(row=3, column=1)
-
-        # Game type frame
-        self.gameTypeFrame = tk.Frame(self.configTop,
-                                      borderwidth=2, relief=tk.GROOVE,
-                                      padx=10, pady=10)
-        self.gameTypeFrame.grid(row=1, column=0)
-        self.gameLabel = tk.Label(self.gameTypeFrame,
-                                  font=MENU_BIG_FONTS,
-                                  text='Game Type')
-        self.gameLabel.grid(row=0)
-        self.normalGameRadio = tk.Radiobutton(self.gameTypeFrame,
-                                              text='Normal',
-                                              variable=gameTypeVar,
-                                              value=1)
-        self.normalGameRadio.grid(row=1, sticky=tk.W)
-        self.pausedGameRadio= tk.Radiobutton(self.gameTypeFrame,
-                                              text='Paused',
-                                              variable=gameTypeVar,
-                                              value=2)
-        self.pausedGameRadio.grid(row=2, sticky=tk.W)
-        self.changeSpeedGameRadio= tk.Radiobutton(self.gameTypeFrame,
-                                              text='Change Speed',
-                                              variable=gameTypeVar,
-                                              value=3)
-        self.changeSpeedGameRadio.grid(row=3, sticky=tk.W)
-
-
-        # Select shapes frame
-        self.selectShapesFrame = tk.Frame(self.configTop,
-                                          borderwidth=2, relief=tk.GROOVE,
-                                          padx=10, pady=10)
-        self.selectShapesFrame.grid(row=0, column=1, rowspan=2)
-        self.selectLabel = tk.Label(self.selectShapesFrame,
-                                    text='Select Shapes', font=MENU_BIG_FONTS)
-        self.selectLabel.grid(row=0, column=0)
-
-        self.L_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoL,
-                                      variable=shapeL, onvalue=1, offvalue=0)
-        self.L_check.image = photoL
-        self.L_check.grid(row=1, column=0)
-
-        self.J_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoJ,
-                                      variable=shapeJ, onvalue=1, offvalue=0)
-        self.J_check.image = photoJ
-        self.J_check.grid(row=2, column=0)
-
-        self.O_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoO,
-                                      variable=shapeO, onvalue=1, offvalue=0)
-        self.O_check.image = photoO
-        self.O_check.grid(row=3, column=0)
-
-        self.I_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoI,
-                                      variable=shapeI, onvalue=1, offvalue=0)
-        self.I_check.image = photoI
-        self.I_check.grid(row=4, column=0)
-
-        self.Z_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoZ,
-                                      variable=shapeZ, onvalue=1, offvalue=0)
-        self.Z_check.image = photoZ
-        self.Z_check.grid(row=5, column=0)
-
-        self.S_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoS,
-                                      variable=shapeS, onvalue=1, offvalue=0)
-        self.S_check.image = photoS
-        self.S_check.grid(row=6, column=0)
-
-        self.T_check = tk.Checkbutton(self.selectShapesFrame,
-                                      image=photoT,
-                                      variable=shapeT, onvalue=1, offvalue=0)
-        self.T_check.image = photoT
-        self.T_check.grid(row=7, column=0)
-
-        # Submit button
-        self.resultFrame = tk.Frame(self.configTop,
-                                          borderwidth=2, relief=tk.GROOVE,
-                                          padx=10, pady=10)
-        self.resultFrame.grid(row=2, column=0, rowspan=2)
-        cancelButton = tk.Button(self.resultFrame, text='Cancel',
-                                 command=self.configTop.destroy)
-        cancelButton.grid(column=0, row=0)
-        submitButton = tk.Button(self.resultFrame, text='Submit',
-                                      command=self.configTop.destroy)
-        submitButton.grid(column=1, row=0)
 
 
     # Exit function
@@ -416,8 +303,10 @@ class Application(tk.Tk):
                 'total': 0, 'next': ''}
 
     def step(self):
-        if self.configTop is not None  and self.configTop.winfo_exists():
+        if self.configurationWin is not None  and \
+                self.configurationWin.winfo_exists():
             self.job_id = self.canvas.after(100, self.step)
+            self.debug()
         else:
             if self.tetromino and self.can_be_moved('Down'):
                 self.move_tetromino((0, 1))
