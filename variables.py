@@ -1,1 +1,0 @@
-MENU_BIG_FONTS = 'TkDefaultFont 14'

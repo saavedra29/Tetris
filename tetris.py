@@ -26,6 +26,7 @@ from tkinter import messagebox
 from os import getpid
 from os import system
 from conf import Configuration
+import settings as set
 
 # ===============================================
 # WINDOW OPTIONS
@@ -60,12 +61,8 @@ COMPLETE_ROW_FG_COLOR = None
 LEVEL_0_DELAY = 1000 # inital delay between steps
 ROWS_BY_LEVEL = 10
 POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
-
-#
 MENU_FONTS = 'TkDefaultFont 12'
-WIDTH = 10
-HEIGHT = 20
-SIZE = 30 # square size in pixels
+
 
 # Tetrominos
 I = (
@@ -151,15 +148,15 @@ Z = (
 
 class Application(tk.Tk):
 
-    def __init__(self, width=WIDTH, height=HEIGHT, size=SIZE):
+    def __init__(self):
         tk.Tk.__init__(self)
         self.title('Tetris')
         self.option_add('*Font', MENU_FONTS)
         self.configurationWin = None
         self.grid()
-        self.width = width
-        self.height = height
-        self.size = size
+        # self.width = set.width
+        # self.height = set.height
+        # self.size = set.size
         self.create_widgets()
         self.draw_grid()
         self.create_events()
@@ -167,21 +164,13 @@ class Application(tk.Tk):
         self.game_init()
 
 
-        self.gameTypeVar = tk.IntVar()
-        self.shapeL = tk.IntVar()
-        self.shapeO = tk.IntVar()
-        self.shapeI = tk.IntVar()
-        self.shapeS = tk.IntVar()
-        self.shapeT = tk.IntVar()
-        self.shapeZ = tk.IntVar()
-        self.shapeJ = tk.IntVar()
 
     def create_widgets(self):
         top = self.winfo_toplevel()
         top.config(bg=BG_COLOR)
 
-        width = self.width * self.size
-        height = self.height * self.size
+        width = set.width * set.size
+        height = set.height * set.size
 
         # main menu
         self.menuBar = tk.Menu()
@@ -237,15 +226,15 @@ class Application(tk.Tk):
             system(command)
 
     def draw_grid(self):
-        for i in range(self.width - 1):
-            x = (self.size * i) + self.size
+        for i in range(set.width - 1):
+            x = (set.size * i) + set.size
             y0 = 0
-            y1 = self.size * self.height
+            y1 = set.size * set.height
             self.canvas.create_line(x, y0, x, y1, fill=BOARD_GRID_COLOR)
-        for i in range(self.height - 1):
+        for i in range(set.height - 1):
             x0 = 0
-            x1 = self.size * self.width
-            y = (self.size * i) + self.size
+            x1 = set.size * set.width
+            y = (set.size * i) + set.size
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
@@ -274,7 +263,7 @@ class Application(tk.Tk):
         return tetrominos
 
     def get_init_coords(self, tetromino):
-        return (int(self.width / 2.0 - len(tetromino[0]) / 2.0), 1)
+        return (int(set.width / 2.0 - len(tetromino[0]) / 2.0), 1)
 
     def game_init(self):
         self.board = self.get_init_board()
@@ -288,10 +277,10 @@ class Application(tk.Tk):
 
     def get_init_board(self):
         if getattr(self, 'board', None) is None:
-            self.board = [[0] * self.width for _ in range(self.height)]
+            self.board = [[0] * set.width for _ in range(set.height)]
         else:
-            for y in range(self.height):
-                for x in range(self.width):
+            for y in range(set.height):
+                for x in range(set.width):
                     if self.board[y][x]:
                         self.canvas.delete(self.board[y][x])
                         self.board[y][x] = 0
@@ -331,7 +320,7 @@ class Application(tk.Tk):
 
     def check_status(self):
         rows = []
-        for row in range(self.height):
+        for row in range(set.height):
             if 0 not in self.board[row]:
                 rows.append(row)
         if rows:
@@ -350,10 +339,10 @@ class Application(tk.Tk):
             for id in self.board[row]:
                 self.canvas.delete(id)
             del self.board[row]
-            self.board.insert(0, [0] * self.width)
+            self.board.insert(0, [0] * set.width)
             for row0 in range(row + 1):
                 for id0 in self.board[row0]:
-                    self.canvas.move(id0, 0, self.size)
+                    self.canvas.move(id0, 0, set.size)
         self.canvas.update()
 
     def set_score(self, rows):
@@ -405,10 +394,10 @@ class Application(tk.Tk):
         for y in range(self.tetromino['rows']):
             for x in range(self.tetromino['cols']):
                 if piece[y][x] == 1:
-                    x1 = (x0 + x) * self.size
-                    y1 = (y0 + y) * self.size
-                    x2 = x1 + self.size
-                    y2 = y1 + self.size
+                    x1 = (x0 + x) * set.size
+                    y1 = (y0 + y) * set.size
+                    x2 = x1 + set.size
+                    y2 = y1 + set.size
                     id = self.canvas.create_rectangle(
                             x1, y1, x2, y2, width=TETROMINO_BORDER_WIDTH,
                             outline=TETROMINO_FG_COLOR,
@@ -419,8 +408,8 @@ class Application(tk.Tk):
 
     def del_tetromino(self):
         if self.tetromino['ids']:
-            for y in range(self.height):
-                for x in range(self.width):
+            for y in range(set.height):
+                for x in range(set.width):
                     if self.board[y][x] in self.tetromino['ids']:
                         self.board[y][x] = 0
             for id in self.tetromino['ids']:
@@ -446,9 +435,9 @@ class Application(tk.Tk):
                 if piece[y0][x0] == 1:
                     if x == -1 and x0 == 1:
                         return False
-                    if x + x0 >= self.width:
+                    if x + x0 >= set.width:
                         return False
-                    if y + y0 >= self.height:
+                    if y + y0 >= set.height:
                         return False
                     x1 = x + x0
                     y1 = y + y0
@@ -472,9 +461,9 @@ class Application(tk.Tk):
     def move_tetromino(self, offset):
         x, y = offset
         ranges = {
-            (-1, 0): ((0, self.width, 1), (0, self.height, 1)),
-            ( 1, 0): ((self.width-1, -1, -1), (0, self.height, 1)),
-            ( 0, 1): ((0, self.width, 1), (self.height-1, -1, -1))
+            (-1, 0): ((0, set.width, 1), (0, set.height, 1)),
+            ( 1, 0): ((set.width-1, -1, -1), (0, set.height, 1)),
+            ( 0, 1): ((0, set.width, 1), (set.height-1, -1, -1))
             }
 
         x_start_stop_step, y_start_stop_step = ranges[offset]
@@ -484,7 +473,7 @@ class Application(tk.Tk):
                 if id in self.tetromino['ids']:
                     self.board[y0 + y][x0 + x] = self.board[y0][x0]
                     self.board[y0][x0] = 0
-                    self.canvas.move(id, x * self.size, y * self.size)
+                    self.canvas.move(id, x * set.size, y * set.size)
 
         x1, y1 = self.tetromino['coords']
         self.tetromino['coords'] = (x1 + x, y1 + y)
@@ -506,13 +495,13 @@ class Application(tk.Tk):
                     if direction == 'Right':
                         x1 = x + x0 + 1
                         y1 = y + y0
-                        if x1 >= self.width or (board[y1][x1] and
+                        if x1 >= set.width or (board[y1][x1] and
                            board[y1][x1] not in self.tetromino['ids']):
                             return False
                     if direction == 'Down':
                         x1 = x + x0
                         y1 = y + y0 + 1
-                        if y1 >= self.height or (board[y1][x1] and
+                        if y1 >= set.height or (board[y1][x1] and
                            board[y1][x1] not in self.tetromino['ids']):
                             return False
         return True
