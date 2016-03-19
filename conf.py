@@ -1,19 +1,20 @@
 import tkinter as tk
+import settings as set
 
 
 MENU_BIG_FONTS = 'TkDefaultFont 14'
 
 class Configuration(tk.Toplevel):
-    def __init__(self, root):
+    def __init__(self):
         super(Configuration, self).__init__()
-        root.gameTypeVar = tk.IntVar()
-        root.shapeL = tk.IntVar()
-        root.shapeO = tk.IntVar()
-        root.shapeI = tk.IntVar()
-        root.shapeS = tk.IntVar()
-        root.shapeT = tk.IntVar()
-        root.shapeZ = tk.IntVar()
-        root.shapeJ = tk.IntVar()
+        set.gameTypeVar = tk.IntVar()
+        set.shapeL = tk.IntVar()
+        set.shapeO = tk.IntVar()
+        set.shapeI = tk.IntVar()
+        set.shapeS = tk.IntVar()
+        set.shapeT = tk.IntVar()
+        set.shapeZ = tk.IntVar()
+        set.shapeJ = tk.IntVar()
         photoL = tk.PhotoImage(file='images/L.png')
         photoO = tk.PhotoImage(file='images/O.png')
         photoI = tk.PhotoImage(file='images/I.png')
@@ -65,17 +66,17 @@ class Configuration(tk.Toplevel):
         self.gameLabel.grid(row=0)
         self.normalGameRadio = tk.Radiobutton(self.gameTypeFrame,
                                               text='Normal',
-                                              variable=root.gameTypeVar,
+                                              variable=set.gameTypeVar,
                                               value=1)
         self.normalGameRadio.grid(row=1, sticky=tk.W)
         self.pausedGameRadio= tk.Radiobutton(self.gameTypeFrame,
                                               text='Paused',
-                                              variable=root.gameTypeVar,
+                                              variable=set.gameTypeVar,
                                               value=2)
         self.pausedGameRadio.grid(row=2, sticky=tk.W)
         self.changeSpeedGameRadio= tk.Radiobutton(self.gameTypeFrame,
                                               text='Change Speed',
-                                              variable=root.gameTypeVar,
+                                              variable=set.gameTypeVar,
                                               value=3)
         self.changeSpeedGameRadio.grid(row=3, sticky=tk.W)
 
@@ -91,49 +92,49 @@ class Configuration(tk.Toplevel):
 
         self.L_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoL,
-                                      variable=root.shapeL, onvalue=1,
+                                      variable=set.shapeL, onvalue=1,
                                       offvalue=0)
         self.L_check.image = photoL
         self.L_check.grid(row=1, column=0)
 
         self.J_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoJ,
-                                      variable=root.shapeJ, onvalue=1,
+                                      variable=set.shapeJ, onvalue=1,
                                       offvalue=0)
         self.J_check.image = photoJ
         self.J_check.grid(row=2, column=0)
 
         self.O_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoO,
-                                      variable=root.shapeO, onvalue=1,
+                                      variable=set.shapeO, onvalue=1,
                                       offvalue=0)
         self.O_check.image = photoO
         self.O_check.grid(row=3, column=0)
 
         self.I_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoI,
-                                      variable=root.shapeI, onvalue=1,
+                                      variable=set.shapeI, onvalue=1,
                                       offvalue=0)
         self.I_check.image = photoI
         self.I_check.grid(row=4, column=0)
 
         self.Z_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoZ,
-                                      variable=root.shapeZ, onvalue=1,
+                                      variable=set.shapeZ, onvalue=1,
                                       offvalue=0)
         self.Z_check.image = photoZ
         self.Z_check.grid(row=5, column=0)
 
         self.S_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoS,
-                                      variable=root.shapeS, onvalue=1,
+                                      variable=set.shapeS, onvalue=1,
                                       offvalue=0)
         self.S_check.image = photoS
         self.S_check.grid(row=6, column=0)
 
         self.T_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoT,
-                                      variable=root.shapeT, onvalue=1,
+                                      variable=set.shapeT, onvalue=1,
                                       offvalue=0)
         self.T_check.image = photoT
         self.T_check.grid(row=7, column=0)
