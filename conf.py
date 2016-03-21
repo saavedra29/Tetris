@@ -5,8 +5,9 @@ import settings as set
 MENU_BIG_FONTS = 'TkDefaultFont 14'
 
 class Configuration(tk.Toplevel):
-    def __init__(self):
+    def __init__(self, root):
         super(Configuration, self).__init__()
+        self.root = root
         set.gameTypeVar = tk.IntVar()
         set.shapeL = tk.IntVar()
         set.shapeO = tk.IntVar()
@@ -45,14 +46,23 @@ class Configuration(tk.Toplevel):
         self.widthLabel.grid(row=2, sticky=tk.W)
         self.boxSizeLabel= tk.Label(self.dimensionsFrame, text='Box Size:')
         self.boxSizeLabel.grid(row=3, sticky=tk.W)
-        self.heightSpin = tk.Spinbox(self.dimensionsFrame, from_=10, to=40,
-                                     width=3)
+
+        self.heightDefault = tk.StringVar(self)
+        self.heightDefault.set(set.height)
+        self.heightSpin = tk.Spinbox(self.dimensionsFrame, from_=15, to=35,
+                                     width=3, textvariable=self.heightDefault)
         self.heightSpin.grid(row=1, column=1)
-        self.widthSpin = tk.Spinbox(self.dimensionsFrame, from_=6, to=30,
-                                    width=3)
+
+        self.widthDefault = tk.StringVar(self)
+        self.widthDefault.set(set.width)
+        self.widthSpin = tk.Spinbox(self.dimensionsFrame, from_=6, to=20,
+                                    width=3, textvariable=self.widthDefault)
         self.widthSpin.grid(row=2, column=1)
+
+        self.sizeDefault = tk.StringVar(self)
+        self.sizeDefault.set(set.boxSize)
         self.boxSizeSpin = tk.Spinbox(self.dimensionsFrame, from_=10, to=100,
-                                      width=3)
+                                      width=3, textvariable=self.sizeDefault)
         self.boxSizeSpin.grid(row=3, column=1)
 
         # Game type frame
@@ -147,6 +157,16 @@ class Configuration(tk.Toplevel):
         cancelButton = tk.Button(self.resultFrame, text='Cancel',
                                  command=self.destroy)
         cancelButton.grid(column=0, row=0)
+
         submitButton = tk.Button(self.resultFrame, text='Submit',
-                                      command=self.destroy)
+                                      command=self.submit)
         submitButton.grid(column=1, row=0)
+
+    def submit(self):
+        set.height = int(self.heightSpin.get())
+        set.width = int(self.widthSpin.get())
+        set.boxSize = int(self.boxSizeSpin.get())
+        for child in self.root.winfo_children():
+            child.destroy()
+        self.root.startGame()
+        self.destroy()

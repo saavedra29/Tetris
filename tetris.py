@@ -31,10 +31,10 @@ import settings as set
 # ===============================================
 # WINDOW OPTIONS
 # ===============================================
-BG_COLOR = 'black'
+BG_COLOR = 'gray'
 
 # Board
-BOARD_BG_COLOR = 'black'
+BOARD_BG_COLOR = 'lightgray'
 BOARD_FG_COLOR = 'white'
 BOARD_GRID_COLOR = '#333'
 
@@ -62,7 +62,6 @@ LEVEL_0_DELAY = 1000 # inital delay between steps
 ROWS_BY_LEVEL = 10
 POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
 MENU_FONTS = 'TkDefaultFont 12'
-
 
 # Tetrominos
 I = (
@@ -153,10 +152,10 @@ class Application(tk.Tk):
         self.title('Tetris')
         self.option_add('*Font', MENU_FONTS)
         self.configurationWin = None
-        self.grid()
-        # self.width = set.width
-        # self.height = set.height
-        # self.size = set.size
+        self.startGame()
+
+    def startGame(self):
+        # self.grid()
         self.create_widgets()
         self.draw_grid()
         self.create_events()
@@ -169,8 +168,8 @@ class Application(tk.Tk):
         top = self.winfo_toplevel()
         top.config(bg=BG_COLOR)
 
-        width = set.width * set.size
-        height = set.height * set.size
+        width = set.width * set.boxSize
+        height = set.height * set.boxSize
 
         # main menu
         self.menuBar = tk.Menu()
@@ -199,15 +198,23 @@ class Application(tk.Tk):
 
 
     def debug(self):
-        print('gameTypeVar: {}'.format(str(self.gameTypeVar.get())))
+        print('gameTypeVar: {}'.format(str(set.gameTypeVar.get())))
         print('Shapes:')
-        print('ShapeL: {}'.format(str(self.shapeL.get())))
-        print('ShapeJ: {}'.format(str(self.shapeJ.get())))
-        print('ShapeI: {}'.format(str(self.shapeI.get())))
-        print('ShapeO: {}'.format(str(self.shapeO.get())))
-        print('ShapeT: {}'.format(str(self.shapeT.get())))
-        print('ShapeS: {}'.format(str(self.shapeS.get())))
-        print('ShapeZ: {}'.format(str(self.shapeZ.get())))
+        print('ShapeL: {}'.format(str(set.shapeL.get())))
+        print('ShapeJ: {}'.format(str(set.shapeJ.get())))
+        print('ShapeI: {}'.format(str(set.shapeI.get())))
+        print('ShapeO: {}'.format(str(set.shapeO.get())))
+        print('ShapeT: {}'.format(str(set.shapeT.get())))
+        print('ShapeS: {}'.format(str(set.shapeS.get())))
+        print('ShapeZ: {}'.format(str(set.shapeZ.get())))
+
+    def debug(self, element, name):
+        print('Type of element {}: {}'.format(name, type(element)))
+        print('Value of element {}:'.format(name))
+        for i in element:
+            print(str(i))
+        print('------------')
+
 
     def generalConfig(self):
         self.configurationWin = Configuration(self)
@@ -227,14 +234,15 @@ class Application(tk.Tk):
 
     def draw_grid(self):
         for i in range(set.width - 1):
-            x = (set.size * i) + set.size
+            x = (set.boxSize * i) + set.boxSize
             y0 = 0
-            y1 = set.size * set.height
-            self.canvas.create_line(x, y0, x, y1, fill=BOARD_GRID_COLOR)
+            y1 = set.boxSize * set.height
+            self.canvas.create_line(x, y0, x, y1,
+                                            fill=BOARD_GRID_COLOR)
         for i in range(set.height - 1):
             x0 = 0
-            x1 = set.size * set.width
-            y = (set.size * i) + set.size
+            x1 = set.boxSize * set.width
+            y = (set.boxSize * i) + set.boxSize
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
@@ -263,9 +271,10 @@ class Application(tk.Tk):
         return tetrominos
 
     def get_init_coords(self, tetromino):
-        return (int(set.width / 2.0 - len(tetromino[0]) / 2.0), 1)
+        return int(set.width / 2.0 - len(tetromino[0]) / 2.0), 1
 
     def game_init(self):
+        self.board = None
         self.board = self.get_init_board()
         self.next = copy.deepcopy(random.choice(self.tetrominos))
         self.tetromino = None
@@ -294,8 +303,11 @@ class Application(tk.Tk):
     def step(self):
         if self.configurationWin is not None  and \
                 self.configurationWin.winfo_exists():
-            self.job_id = self.canvas.after(100, self.step)
-            self.debug()
+            if not set.replay:
+                self.job_id = self.canvas.after(100, self.step)
+            else:
+                set.replay = False
+                pass
         else:
             if self.tetromino and self.can_be_moved('Down'):
                 self.move_tetromino((0, 1))
@@ -342,7 +354,7 @@ class Application(tk.Tk):
             self.board.insert(0, [0] * set.width)
             for row0 in range(row + 1):
                 for id0 in self.board[row0]:
-                    self.canvas.move(id0, 0, set.size)
+                    self.canvas.move(id0, 0, set.boxSize)
         self.canvas.update()
 
     def set_score(self, rows):
@@ -394,10 +406,10 @@ class Application(tk.Tk):
         for y in range(self.tetromino['rows']):
             for x in range(self.tetromino['cols']):
                 if piece[y][x] == 1:
-                    x1 = (x0 + x) * set.size
-                    y1 = (y0 + y) * set.size
-                    x2 = x1 + set.size
-                    y2 = y1 + set.size
+                    x1 = (x0 + x) * set.boxSize
+                    y1 = (y0 + y) * set.boxSize
+                    x2 = x1 + set.boxSize
+                    y2 = y1 + set.boxSize
                     id = self.canvas.create_rectangle(
                             x1, y1, x2, y2, width=TETROMINO_BORDER_WIDTH,
                             outline=TETROMINO_FG_COLOR,
@@ -473,7 +485,7 @@ class Application(tk.Tk):
                 if id in self.tetromino['ids']:
                     self.board[y0 + y][x0 + x] = self.board[y0][x0]
                     self.board[y0][x0] = 0
-                    self.canvas.move(id, x * set.size, y * set.size)
+                    self.canvas.move(id, x * set.boxSize, y * set.boxSize)
 
         x1, y1 = self.tetromino['coords']
         self.tetromino['coords'] = (x1 + x, y1 + y)
