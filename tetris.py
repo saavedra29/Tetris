@@ -155,7 +155,7 @@ class Application(tk.Tk):
         self.startGame()
 
     def startGame(self):
-        # self.grid()
+        self.grid()
         self.create_widgets()
         self.draw_grid()
         self.create_events()
