@@ -253,7 +253,14 @@ class Application(tk.Tk):
 
     def get_tetrominos(self):
         tetrominos = []
-        for name in 'IOTLJSZ':
+        s = [set.shapeI, set.shapeO, set.shapeT, set.shapeL,
+             set.shapeJ, set.shapeS, set.shapeZ]
+        shapes = 'IOTLJSZ'
+        usedShapes = []
+        for i in range(len(shapes)):
+            if s[i] == True:
+                usedShapes.append(shapes[i])
+        for name in usedShapes:
             tetromino = globals()[name]
             data = {
                 'name'  : name,

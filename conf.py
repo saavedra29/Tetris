@@ -8,14 +8,14 @@ class Configuration(tk.Toplevel):
     def __init__(self, root):
         super(Configuration, self).__init__()
         self.root = root
-        set.gameTypeVar = tk.IntVar()
-        set.shapeL = tk.IntVar()
-        set.shapeO = tk.IntVar()
-        set.shapeI = tk.IntVar()
-        set.shapeS = tk.IntVar()
-        set.shapeT = tk.IntVar()
-        set.shapeZ = tk.IntVar()
-        set.shapeJ = tk.IntVar()
+        self.gameTypeVar = tk.IntVar()
+        self.shapeL = tk.BooleanVar()
+        self.shapeO = tk.BooleanVar()
+        self.shapeI = tk.BooleanVar()
+        self.shapeS = tk.BooleanVar()
+        self.shapeT = tk.BooleanVar()
+        self.shapeZ = tk.BooleanVar()
+        self.shapeJ = tk.BooleanVar()
         photoL = tk.PhotoImage(file='images/L.png')
         photoO = tk.PhotoImage(file='images/O.png')
         photoI = tk.PhotoImage(file='images/I.png')
@@ -102,50 +102,50 @@ class Configuration(tk.Toplevel):
 
         self.L_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoL,
-                                      variable=set.shapeL, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeL, onvalue=True,
+                                      offvalue=False)
         self.L_check.image = photoL
         self.L_check.grid(row=1, column=0)
 
         self.J_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoJ,
-                                      variable=set.shapeJ, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeJ, onvalue=True,
+                                      offvalue=False)
         self.J_check.image = photoJ
         self.J_check.grid(row=2, column=0)
 
         self.O_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoO,
-                                      variable=set.shapeO, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeO, onvalue=True,
+                                      offvalue=False)
         self.O_check.image = photoO
         self.O_check.grid(row=3, column=0)
 
         self.I_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoI,
-                                      variable=set.shapeI, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeI, onvalue=True,
+                                      offvalue=False)
         self.I_check.image = photoI
         self.I_check.grid(row=4, column=0)
 
         self.Z_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoZ,
-                                      variable=set.shapeZ, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeZ, onvalue=True,
+                                      offvalue=False)
         self.Z_check.image = photoZ
         self.Z_check.grid(row=5, column=0)
 
         self.S_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoS,
-                                      variable=set.shapeS, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeS, onvalue=True,
+                                      offvalue=False)
         self.S_check.image = photoS
         self.S_check.grid(row=6, column=0)
 
         self.T_check = tk.Checkbutton(self.selectShapesFrame,
                                       image=photoT,
-                                      variable=set.shapeT, onvalue=1,
-                                      offvalue=0)
+                                      variable=self.shapeT, onvalue=True,
+                                      offvalue=False)
         self.T_check.image = photoT
         self.T_check.grid(row=7, column=0)
 
@@ -163,10 +163,18 @@ class Configuration(tk.Toplevel):
         submitButton.grid(column=1, row=0)
 
     def submit(self):
+        set.shapeS = self.shapeS.get()
+        set.shapeO = self.shapeO.get()
+        set.shapeI = self.shapeI.get()
+        set.shapeZ = self.shapeZ.get()
+        set.shapeT = self.shapeT.get()
+        set.shapeJ = self.shapeJ.get()
+        set.shapeL = self.shapeL.get()
         set.height = int(self.heightSpin.get())
         set.width = int(self.widthSpin.get())
         set.boxSize = int(self.boxSizeSpin.get())
         for child in self.root.winfo_children():
-            child.destroy()
+            if not child.__dict__['_name'] == self._name:
+                child.destroy()
         self.root.startGame()
         self.destroy()
