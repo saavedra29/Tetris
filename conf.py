@@ -76,17 +76,17 @@ class Configuration(tk.Toplevel):
         self.gameLabel.grid(row=0)
         self.normalGameRadio = tk.Radiobutton(self.gameTypeFrame,
                                               text='Normal',
-                                              variable=set.gameTypeVar,
+                                              variable=self.gameTypeVar,
                                               value=1)
         self.normalGameRadio.grid(row=1, sticky=tk.W)
         self.pausedGameRadio= tk.Radiobutton(self.gameTypeFrame,
                                               text='Paused',
-                                              variable=set.gameTypeVar,
+                                              variable=self.gameTypeVar,
                                               value=2)
         self.pausedGameRadio.grid(row=2, sticky=tk.W)
         self.changeSpeedGameRadio= tk.Radiobutton(self.gameTypeFrame,
                                               text='Change Speed',
-                                              variable=set.gameTypeVar,
+                                              variable=self.gameTypeVar,
                                               value=3)
         self.changeSpeedGameRadio.grid(row=3, sticky=tk.W)
 
@@ -176,6 +176,7 @@ class Configuration(tk.Toplevel):
             tk.messagebox.showinfo('Warning!!!', 'Please choose at least'
                                                  ' one shape.')
             return
+        set.gameTypeVar = self.gameTypeVar.get()
         set.height = int(self.heightSpin.get())
         set.width = int(self.widthSpin.get())
         set.boxSize = int(self.boxSizeSpin.get())

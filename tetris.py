@@ -56,6 +56,9 @@ COMPLETE_ROW_BG_COLOR = 'white' # None for inherit
 COMPLETE_ROW_FG_COLOR = None
 # ===============================================
 
+NORMAL_GAME = 1
+PAUSED_GAME = 2
+CHANGE_SPEED_GAME = 3
 
 # Levels
 LEVEL_0_DELAY = 1000 # inital delay between steps
@@ -317,8 +320,9 @@ class Application(tk.Tk):
                 pass
         else:
             if self.tetromino and self.can_be_moved('Down'):
-                self.move_tetromino((0, 1))
-                self.job_id = self.canvas.after(self.delay, self.step)
+                if set.gameTypeVar is not PAUSED_GAME:
+                    self.move_tetromino((0, 1))
+                    self.job_id = self.canvas.after(self.delay, self.step)
             else:
                 self.check_status()
                 if self.is_gameover(self.next):
