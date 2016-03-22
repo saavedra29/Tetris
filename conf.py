@@ -170,6 +170,12 @@ class Configuration(tk.Toplevel):
         set.shapeT = self.shapeT.get()
         set.shapeJ = self.shapeJ.get()
         set.shapeL = self.shapeL.get()
+        atLeastOneSet = set.shapeS or set.shapeO or set.shapeI or \
+            set.shapeZ or set.shapeT or set.shapeJ or set.shapeL
+        if not atLeastOneSet:
+            tk.messagebox.showinfo('Warning!!!', 'Please choose at least'
+                                                 ' one shape.')
+            return
         set.height = int(self.heightSpin.get())
         set.width = int(self.widthSpin.get())
         set.boxSize = int(self.boxSizeSpin.get())
