@@ -163,7 +163,15 @@ class Application(tk.Tk):
         self.draw_grid()
         self.create_events()
         self.tetrominos = self.get_tetrominos()
-        self.game_init()
+        self.board = None
+        self.board = self.get_init_board()
+        self.next = copy.deepcopy(random.choice(self.tetrominos))
+        self.tetromino = None
+        self.status = self.get_init_status()
+        self.delay = LEVEL_0_DELAY
+        self.job_id = None
+        self.running = True
+        self.step()
 
 
 
@@ -249,7 +257,6 @@ class Application(tk.Tk):
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
-        print('gameTypeVar: {}'.format(set.gameTypeVar))
         self.bind('<KeyPress-Up>', self.rotate)
         self.bind('<KeyPress-Down>', self.move)
         self.bind('<KeyPress-Left>', self.move)
@@ -303,17 +310,6 @@ class Application(tk.Tk):
     def get_init_coords(self, tetromino):
         return int(set.width / 2.0 - len(tetromino[0]) / 2.0), 1
 
-    def game_init(self):
-        self.board = None
-        self.board = self.get_init_board()
-        self.next = copy.deepcopy(random.choice(self.tetrominos))
-        self.tetromino = None
-        self.status = self.get_init_status()
-        self.delay = LEVEL_0_DELAY
-        self.job_id = None
-        self.running = True
-        self.step()
-
     def get_init_board(self):
         if getattr(self, 'board', None) is None:
             self.board = [[0] * set.width for _ in range(set.height)]
@@ -331,7 +327,6 @@ class Application(tk.Tk):
                 'total': 0, 'next': ''}
 
     def step(self):
-        print('Delay: {}'.format(str(self.delay)))
         if self.configurationWin is not None  and \
                 self.configurationWin.winfo_exists():
             if not set.replay:
@@ -350,7 +345,6 @@ class Application(tk.Tk):
                     title = 'Game Over'
                     message = 'Your score: %d' % self.status['score']
                     messagebox.showinfo(title, message)
-                    # self.game_init()
                     self.startGame()
                 else:
                     self.tetromino = self.next
