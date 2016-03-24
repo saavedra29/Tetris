@@ -197,6 +197,12 @@ class Application(tk.Tk):
         self.menuBar.add_cascade(label='Configuration', menu=self.confMenu)
         self.confMenu.add_command(label='Game', command=self.generalConfig)
 
+        # help submenu
+        self.helpMenu = tk.Menu(self.menuBar, tearoff=False)
+        self.menuBar.add_cascade(label='Help', menu=self.helpMenu)
+        self.helpMenu.add_command(label='Instructions',
+                                  command=self.instructions)
+
 
         self.canvas = tk.Canvas(self, width=width, height=height,
                                 bg=BOARD_BG_COLOR,
@@ -232,6 +238,23 @@ class Application(tk.Tk):
 
     def generalConfig(self):
         self.configurationWin = Configuration(self)
+
+    def instructions(self):
+        message = "------ Game Modes -------\n\n"\
+        "NORMAL: Exactly like normal Tetris\n\n"\
+        "PAUSED: The piece falls only when "\
+        "the player presses the Down key\n\n"\
+        "SPEED: The speed of the falling "\
+        "piece is determined by the player\n\n\n"\
+        "------- Key Bindings -------\n"\
+        "Up\t\t=> up arrow\n"\
+        "Down\t\t=> down arrow\n"\
+        "Left\t\t=> left arrow\n"\
+        "Right\t\t=> right arrow\n"\
+        "Increase speed\t=> F1\n"\
+        "Decrease speed\t=> F2\n"\
+        "Pause\t\t=> p\n"
+        tk.messagebox.showinfo('Game Modes', message)
 
     # Exit function
     def onExit(self):
@@ -403,15 +426,15 @@ class Application(tk.Tk):
             type = 'Normal'
         elif set.gameTypeVar == PAUSED_GAME:
             type = 'Paused'
-        else: type = 'Change Speed'
+        else: type = 'Speed'
         lines = [
-            'Score: %6s' % self.status['score'],
+            'Score: %7s' % self.status['score'],
             '',
-            'Type : %6s' % type,
-            'Level: %6s' % self.status['level'],
-            'Rows : %6s' % self.status['rows'],
+            'Type : %7s' % type,
+            'Level: %7s' % self.status['level'],
+            'Rows : %7s' % self.status['rows'],
             '',
-            'Next : %6s' % self.status['next'],
+            'Next : %7s' % self.status['next'],
             ]
         self.lb_status.config(text='\n'.join(lines))
 
