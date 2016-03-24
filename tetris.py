@@ -249,10 +249,30 @@ class Application(tk.Tk):
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
+        print('gameTypeVar: {}'.format(set.gameTypeVar))
         self.bind('<KeyPress-Up>', self.rotate)
         self.bind('<KeyPress-Down>', self.move)
         self.bind('<KeyPress-Left>', self.move)
         self.bind('<KeyPress-Right>', self.move)
+        if set.gameTypeVar is CHANGE_SPEED_GAME:
+            self.bind('<KeyPress-F1>', self.increaseSpeed)
+            self.bind('<KeyPress-F2>', self.decreaseSpeed)
+
+    def increaseSpeed(self, event):
+        if self.delay < 50:
+            self.delay = 50
+        elif self.delay > 5000:
+            self.delay = 5000
+        else:
+            self.delay -= 20
+
+    def decreaseSpeed(self, event):
+        if self.delay < 50:
+            self.delay = 50
+        elif self.delay > 5000:
+            self.delay = 5000
+        else:
+            self.delay += 20
 
     def get_tetrominos(self):
         tetrominos = []
@@ -311,6 +331,7 @@ class Application(tk.Tk):
                 'total': 0, 'next': ''}
 
     def step(self):
+        print('Delay: {}'.format(str(self.delay)))
         if self.configurationWin is not None  and \
                 self.configurationWin.winfo_exists():
             if not set.replay:
@@ -329,7 +350,8 @@ class Application(tk.Tk):
                     title = 'Game Over'
                     message = 'Your score: %d' % self.status['score']
                     messagebox.showinfo(title, message)
-                    self.game_init()
+                    # self.game_init()
+                    self.startGame()
                 else:
                     self.tetromino = self.next
                     self.next = copy.deepcopy(random.choice(self.tetrominos))
