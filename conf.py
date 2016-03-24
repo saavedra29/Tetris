@@ -156,11 +156,10 @@ class Configuration(tk.Toplevel):
         self.T_check.image = photoT
         self.T_check.grid(row=7, column=0)
 
-        # Submit button
         self.resultFrame = tk.Frame(self,
                                           borderwidth=2, relief=tk.GROOVE,
                                           padx=10, pady=10)
-        self.resultFrame.grid(row=2, column=0, rowspan=2)
+        self.resultFrame.grid(row=2, column=0, rowspan=2, columnspan=2)
         cancelButton = tk.Button(self.resultFrame, text='Cancel',
                                  command=self.destroy)
         cancelButton.grid(column=0, row=0)

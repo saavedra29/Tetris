@@ -59,6 +59,7 @@ COMPLETE_ROW_FG_COLOR = None
 NORMAL_GAME = 1
 PAUSED_GAME = 2
 CHANGE_SPEED_GAME = 3
+isPaused = False
 
 # Levels
 LEVEL_0_DELAY = 1000 # inital delay between steps
@@ -226,11 +227,11 @@ class Application(tk.Tk):
             print(str(i))
         print('------------')
 
+    def pause(self, event):
+        tk.messagebox.showinfo('Paused', 'Press ok to continue')
 
     def generalConfig(self):
         self.configurationWin = Configuration(self)
-
-
 
     # Exit function
     def onExit(self):
@@ -257,6 +258,7 @@ class Application(tk.Tk):
             self.canvas.create_line(x0, y, x1, y, fill=BOARD_GRID_COLOR)
 
     def create_events(self):
+        self.bind('<KeyPress-p>', self.pause)
         self.bind('<KeyPress-Up>', self.rotate)
         self.bind('<KeyPress-Down>', self.move)
         self.bind('<KeyPress-Left>', self.move)
@@ -268,15 +270,11 @@ class Application(tk.Tk):
     def increaseSpeed(self, event):
         if self.delay < 50:
             self.delay = 50
-        elif self.delay > 5000:
-            self.delay = 5000
         else:
             self.delay -= 20
 
     def decreaseSpeed(self, event):
-        if self.delay < 50:
-            self.delay = 50
-        elif self.delay > 5000:
+        if self.delay > 5000:
             self.delay = 5000
         else:
             self.delay += 20
@@ -327,6 +325,11 @@ class Application(tk.Tk):
                 'total': 0, 'next': ''}
 
     def step(self):
+        for child in self.winfo_children():
+            if child.__dict__['widgetName'] == 'frame':
+                self.job_id = self.canvas.after(100, self.step)
+                return
+
         if self.configurationWin is not None  and \
                 self.configurationWin.winfo_exists():
             if not set.replay:
@@ -389,26 +392,24 @@ class Application(tk.Tk):
         self.status['rows'] += len(rows)
         if self.status['rows'] % ROWS_BY_LEVEL == 0:
             self.status['level'] += 1
-            if self.delay > 100:
-                self.delay -= 100
+            if set.gameTypeVar is not CHANGE_SPEED_GAME:
+                if self.delay > 100:
+                    self.delay -= 100
         self.status['score'] += points
         self.update_label_status()
 
     def update_label_status(self):
+        if set.gameTypeVar == NORMAL_GAME:
+            type = 'Normal'
+        elif set.gameTypeVar == PAUSED_GAME:
+            type = 'Paused'
+        else: type = 'Change Speed'
         lines = [
             'Score: %6s' % self.status['score'],
             '',
+            'Type : %6s' % type,
             'Level: %6s' % self.status['level'],
             'Rows : %6s' % self.status['rows'],
-            '',
-            'O    : %6s' % self.status['O'],
-            'I    : %6s' % self.status['I'],
-            'J    : %6s' % self.status['J'],
-            'L    : %6s' % self.status['L'],
-            'T    : %6s' % self.status['T'],
-            'S    : %6s' % self.status['S'],
-            'Z    : %6s' % self.status['Z'],
-            'Total: %6s' % self.status['total'],
             '',
             'Next : %6s' % self.status['next'],
             ]
