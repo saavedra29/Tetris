@@ -1,21 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-
-Tetяis
-
-    Keys
-    --------------------------------------------------
-    left   : request to translate left by one column
-    right  : request to translate right by one column
-    up     : request to do a counterclockwise rotation
-    down   : request to translate down by one row
-
-__author__ = 'Leonardo Vidarte'
-
-"""
-
 import time
 import random
 import copy
@@ -37,6 +19,7 @@ BG_COLOR = 'gray'
 BOARD_BG_COLOR = 'lightgray'
 BOARD_FG_COLOR = 'white'
 BOARD_GRID_COLOR = '#333'
+MENU_FONTS = 'TkDefaultFont 12'
 
 # Status
 FONT_SIZE = 12
@@ -65,7 +48,6 @@ isPaused = False
 LEVEL_0_DELAY = 1000 # inital delay between steps
 ROWS_BY_LEVEL = 10
 POINTS = [40, 100, 300, 1200] # 1 , 2, 3, Tetris
-MENU_FONTS = 'TkDefaultFont 12'
 
 # Tetrominos
 I = (
@@ -214,25 +196,6 @@ class Application(tk.Tk):
             self, bg=BG_COLOR, fg=FONT_COLOR, font=('monospace', FONT_SIZE))
         lb_status.grid(row=0, column=1, padx=(0, 20), pady=20, sticky=tk.N)
 
-
-    def debug(self):
-        print('gameTypeVar: {}'.format(str(set.gameTypeVar.get())))
-        print('Shapes:')
-        print('ShapeL: {}'.format(str(set.shapeL.get())))
-        print('ShapeJ: {}'.format(str(set.shapeJ.get())))
-        print('ShapeI: {}'.format(str(set.shapeI.get())))
-        print('ShapeO: {}'.format(str(set.shapeO.get())))
-        print('ShapeT: {}'.format(str(set.shapeT.get())))
-        print('ShapeS: {}'.format(str(set.shapeS.get())))
-        print('ShapeZ: {}'.format(str(set.shapeZ.get())))
-
-    def debug(self, element, name):
-        print('Type of element {}: {}'.format(name, type(element)))
-        print('Value of element {}:'.format(name))
-        for i in element:
-            print(str(i))
-        print('------------')
-
     def pause(self, event):
         tk.messagebox.showinfo('Paused', 'Press ok to continue')
 
@@ -289,6 +252,9 @@ class Application(tk.Tk):
         if set.gameTypeVar is CHANGE_SPEED_GAME:
             self.bind('<KeyPress-F1>', self.increaseSpeed)
             self.bind('<KeyPress-F2>', self.decreaseSpeed)
+        else:
+            self.unbind('<KeyPress-F1>')
+            self.unbind('<KeyPress-F2>')
 
     def increaseSpeed(self, event):
         if self.delay < 50:
@@ -430,7 +396,7 @@ class Application(tk.Tk):
         lines = [
             'Score: %7s' % self.status['score'],
             '',
-            'Type : %7s' % type,
+            'Mode : %7s' % type,
             'Level: %7s' % self.status['level'],
             'Rows : %7s' % self.status['rows'],
             '',
@@ -572,7 +538,6 @@ class Application(tk.Tk):
 
 if __name__ == '__main__':
 
-    prog = u'Tetяis'
     app = Application()
     app.mainloop()
 
