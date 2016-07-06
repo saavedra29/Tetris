@@ -9,6 +9,7 @@ from os import getpid
 from os import system
 from conf import Configuration
 import settings as set
+import simpleaudio as sa
 
 # ===============================================
 # WINDOW OPTIONS
@@ -138,6 +139,10 @@ class Application(tk.Tk):
         self.title('Tetris')
         self.option_add('*Font', MENU_FONTS)
         self.configurationWin = None
+        self.finishLine = sa.WaveObject.from_wave_file("sounds/finishLine.wav")
+        self.finishGame = sa.WaveObject.from_wave_file("sounds/finishGame.wav")
+        self.backgroundMusic = sa.WaveObject.from_wave_file(
+            "sounds/backgroundMusic.wav")
         self.startGame()
 
     def startGame(self):
@@ -154,6 +159,7 @@ class Application(tk.Tk):
         self.delay = LEVEL_0_DELAY
         self.job_id = None
         self.running = True
+        self.backgroundMusic.play()
         self.step()
 
 
@@ -334,6 +340,7 @@ class Application(tk.Tk):
             else:
                 self.check_status()
                 if self.is_gameover(self.next):
+                    self.finishGame.play()
                     title = 'Game Over'
                     message = 'Your score: %d' % self.status['score']
                     messagebox.showinfo(title, message)
@@ -355,6 +362,7 @@ class Application(tk.Tk):
             if 0 not in self.board[row]:
                 rows.append(row)
         if rows:
+            self.finishLine.play()
             self.del_rows(rows)
             self.set_score(rows)
 

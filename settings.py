@@ -1,4 +1,4 @@
-MENU_BIG_FONTS = 'TkDefaultFont 14'
+# MENU_BIG_FONTS = 'TkDefaultFont 14'
 
 gameTypeVar = 1
 shapeL = True
