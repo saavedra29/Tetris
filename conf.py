@@ -16,6 +16,7 @@ class Configuration(tk.Toplevel):
         self.shapeT = tk.BooleanVar()
         self.shapeZ = tk.BooleanVar()
         self.shapeJ = tk.BooleanVar()
+        self.shapeD = tk.BooleanVar()
         self.shapeL.set(True)
         self.shapeO.set(True)
         self.shapeI.set(True)
@@ -23,6 +24,7 @@ class Configuration(tk.Toplevel):
         self.shapeT.set(True)
         self.shapeZ.set(True)
         self.shapeJ.set(True)
+        self.shapeD.set(True)
         photoL = tk.PhotoImage(file='images/L.png')
         photoO = tk.PhotoImage(file='images/O.png')
         photoI = tk.PhotoImage(file='images/I.png')
@@ -30,6 +32,7 @@ class Configuration(tk.Toplevel):
         photoT = tk.PhotoImage(file='images/T.png')
         photoZ = tk.PhotoImage(file='images/Z.png')
         photoJ = tk.PhotoImage(file='images/J.png')
+        photoD = tk.PhotoImage(file='images/D.png')
 
 
         # Toplevel window for configuration
@@ -156,6 +159,13 @@ class Configuration(tk.Toplevel):
         self.T_check.image = photoT
         self.T_check.grid(row=7, column=0)
 
+        self.T_check = tk.Checkbutton(self.selectShapesFrame,
+                                      image=photoD,
+                                      variable=self.shapeD, onvalue=True,
+                                      offvalue=False)
+        self.T_check.image = photoD
+        self.T_check.grid(row=8, column=0)
+
         self.resultFrame = tk.Frame(self,
                                           borderwidth=2, relief=tk.GROOVE,
                                           padx=10, pady=10)
@@ -176,8 +186,9 @@ class Configuration(tk.Toplevel):
         set.shapeT = self.shapeT.get()
         set.shapeJ = self.shapeJ.get()
         set.shapeL = self.shapeL.get()
+        set.shapeD = self.shapeD.get()
         atLeastOneSet = set.shapeS or set.shapeO or set.shapeI or \
-            set.shapeZ or set.shapeT or set.shapeJ or set.shapeL
+            set.shapeZ or set.shapeT or set.shapeJ or set.shapeL or set.shapeD
         if not atLeastOneSet:
             tk.messagebox.showinfo('Warning!!!', 'Please choose at least'
                                                  ' one shape.')

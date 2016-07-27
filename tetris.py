@@ -36,6 +36,7 @@ J_COLOR = 'blue'
 L_COLOR = 'orange'
 S_COLOR = 'green'
 Z_COLOR = 'red'
+D_COLOR = 'black'
 COMPLETE_ROW_BG_COLOR = 'white' # None for inherit
 COMPLETE_ROW_FG_COLOR = None
 # ===============================================
@@ -130,6 +131,9 @@ Z = (
       (0,1,0)),
      )
 
+D = (
+    ((1,),),
+    )
 
 
 class Application(tk.Tk):
@@ -277,8 +281,8 @@ class Application(tk.Tk):
     def get_tetrominos(self):
         tetrominos = []
         s = [set.shapeI, set.shapeO, set.shapeT, set.shapeL,
-             set.shapeJ, set.shapeS, set.shapeZ]
-        shapes = 'IOTLJSZ'
+             set.shapeJ, set.shapeS, set.shapeZ, set.shapeD]
+        shapes = 'IOTLJSZD'
         usedShapes = []
         for i in range(len(shapes)):
             if s[i] == True:
@@ -316,7 +320,7 @@ class Application(tk.Tk):
 
     def get_init_status(self):
         return {'score': 0, 'rows': 0, 'level': 0,
-                'O': 0, 'I': 0, 'S': 0, 'T': 0, 'Z': 0, 'L': 0, 'J': 0,
+                'O': 0, 'I': 0, 'S': 0, 'T': 0, 'Z': 0, 'L': 0, 'J': 0, 'D': 0,
                 'total': 0, 'next': ''}
 
     def step(self):

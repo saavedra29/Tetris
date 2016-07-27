@@ -8,6 +8,7 @@ shapeT = True
 shapeS = True
 shapeZ = True
 shapeJ = True
+shapeD = True
 width = 10
 height = 20
 boxSize = 30
