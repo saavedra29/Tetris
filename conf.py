@@ -1,7 +1,7 @@
 import tkinter as tk
 import settings as set
 
-
+saveSettings = [True, True, True, True, True, True, True, False]
 MENU_BIG_FONTS = 'TkDefaultFont 14'
 
 class Configuration(tk.Toplevel):
@@ -17,14 +17,14 @@ class Configuration(tk.Toplevel):
         self.shapeZ = tk.BooleanVar()
         self.shapeJ = tk.BooleanVar()
         self.shapeD = tk.BooleanVar()
-        self.shapeL.set(True)
-        self.shapeO.set(True)
-        self.shapeI.set(True)
-        self.shapeS.set(True)
-        self.shapeT.set(True)
-        self.shapeZ.set(True)
-        self.shapeJ.set(True)
-        self.shapeD.set(True)
+        self.shapeL.set(saveSettings[0])
+        self.shapeO.set(saveSettings[1])
+        self.shapeI.set(saveSettings[2])
+        self.shapeS.set(saveSettings[3])
+        self.shapeT.set(saveSettings[4])
+        self.shapeZ.set(saveSettings[5])
+        self.shapeJ.set(saveSettings[6])
+        self.shapeD.set(saveSettings[7])
         photoL = tk.PhotoImage(file='images/L.png')
         photoO = tk.PhotoImage(file='images/O.png')
         photoI = tk.PhotoImage(file='images/I.png')
@@ -179,14 +179,15 @@ class Configuration(tk.Toplevel):
         submitButton.grid(column=1, row=0)
 
     def submit(self):
-        set.shapeS = self.shapeS.get()
-        set.shapeO = self.shapeO.get()
-        set.shapeI = self.shapeI.get()
-        set.shapeZ = self.shapeZ.get()
-        set.shapeT = self.shapeT.get()
-        set.shapeJ = self.shapeJ.get()
-        set.shapeL = self.shapeL.get()
-        set.shapeD = self.shapeD.get()
+        saveSettings[0] = set.shapeL = self.shapeL.get()
+        saveSettings[1] = set.shapeO = self.shapeO.get()
+        saveSettings[2] = set.shapeI = self.shapeI.get()
+        saveSettings[3] = set.shapeS = self.shapeS.get()
+        saveSettings[4] = set.shapeT = self.shapeT.get()
+        saveSettings[5] = set.shapeZ = self.shapeZ.get()
+        saveSettings[6] = set.shapeJ = self.shapeJ.get()
+        saveSettings[7] = set.shapeD = self.shapeD.get()
+
         atLeastOneSet = set.shapeS or set.shapeO or set.shapeI or \
             set.shapeZ or set.shapeT or set.shapeJ or set.shapeL or set.shapeD
         if not atLeastOneSet:
