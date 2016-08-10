@@ -36,7 +36,7 @@ J_COLOR = 'blue'
 L_COLOR = 'orange'
 S_COLOR = 'green'
 Z_COLOR = 'red'
-D_COLOR = 'black'
+D_COLOR = '#8c640e'
 COMPLETE_ROW_BG_COLOR = 'white' # None for inherit
 COMPLETE_ROW_FG_COLOR = None
 # ===============================================
